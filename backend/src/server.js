@@ -11,7 +11,8 @@ async function startServer() {
       console.log(`Servidor rodando na porta ${PORT}`);
     });
   } catch (error) {
-    console.error('Erro ao iniciar servidor:', error.message);
+    console.error('Erro ao iniciar servidor:', error);
+    process.exit(1);
   }
 }
 
