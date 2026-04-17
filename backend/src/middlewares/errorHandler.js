@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-function errorHandler(err, req, res, next) {
-  console.error(err?.response?.data || err);
-
-  return res.status(err?.response?.status || err.status || 500).json({
-    message:
-      err?.response?.data?.message ||
-      err.message ||
-      'Erro interno do servidor',
-    details: err?.response?.data || null
-  });
-}
-
-=======
 function errorHandler(err, req, res, next) {
   const responseData = err?.response?.data || null;
 
@@ -27,5 +13,4 @@ function errorHandler(err, req, res, next) {
   });
 }
 
->>>>>>> 266f3b5 (melhoria: exibir erro detalhado da API Mercado Livre)
 module.exports = { errorHandler };
