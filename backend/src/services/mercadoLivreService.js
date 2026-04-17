@@ -68,9 +68,7 @@ async function createRemoteItem(mlUserId, listing) {
     buying_mode: 'buy_it_now',
     condition: 'new',
     listing_type_id: 'gold_special',
-    pictures: listing.pictureUrl
-      ? [{ source: listing.pictureUrl }]
-      : [],
+    pictures: listing.pictureUrl ? [{ source: listing.pictureUrl }] : [],
     attributes: Array.isArray(listing.attributes) ? listing.attributes : []
   };
 
@@ -85,7 +83,10 @@ async function createRemoteItem(mlUserId, listing) {
     }
   );
 
-  return response.data;
+  return {
+    requestPayload: payload,
+    responsePayload: response.data
+  };
 }
 
 async function updateRemoteItem(mlUserId, itemId, listing) {
@@ -109,11 +110,30 @@ async function updateRemoteItem(mlUserId, itemId, listing) {
     }
   );
 
+  return {
+    requestPayload: payload,
+    responsePayload: response.data
+  };
+}
+
+async function getRemoteItem(mlUserId, itemId) {
+  const accessToken = await getValidAccessToken(mlUserId);
+
+  const response = await axios.get(
+    `https://api.mercadolibre.com/items/${itemId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  );
+
   return response.data;
 }
 
 module.exports = {
   getValidAccessToken,
   createRemoteItem,
-  updateRemoteItem
+  updateRemoteItem,
+  getRemoteItem
 };
