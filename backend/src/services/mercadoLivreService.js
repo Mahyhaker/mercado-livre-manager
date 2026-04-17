@@ -56,18 +56,6 @@ async function getValidAccessToken(mlUserId) {
   return savedToken.accessToken;
 }
 
-async function getCurrentMercadoLivreUser(mlUserId) {
-  const accessToken = await getValidAccessToken(mlUserId);
-
-  const response = await axios.get('https://api.mercadolibre.com/users/me', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-
-  return response.data;
-}
-
 async function createRemoteItem(mlUserId, listing) {
   const accessToken = await getValidAccessToken(mlUserId);
 
@@ -79,7 +67,10 @@ async function createRemoteItem(mlUserId, listing) {
     available_quantity: Number(listing.availableQuantity),
     buying_mode: 'buy_it_now',
     condition: 'new',
-    listing_type_id: 'gold_special'
+    listing_type_id: 'gold_special',
+    pictures: listing.pictureUrl
+      ? [{ source: listing.pictureUrl }]
+      : []
   };
 
   const response = await axios.post(
@@ -121,7 +112,6 @@ async function updateRemoteItem(mlUserId, itemId, listing) {
 
 module.exports = {
   getValidAccessToken,
-  getCurrentMercadoLivreUser,
   createRemoteItem,
   updateRemoteItem
 };
