@@ -7,7 +7,9 @@ const {
   getListingById,
   updateListing,
   deleteListing,
-  syncListing
+  syncListing,
+  reconcileListing,
+  getListingLogs
 } = require('../controllers/listingController');
 
 router.post('/', createListing);
@@ -16,5 +18,7 @@ router.get('/:id', getListingById);
 router.put('/:id', updateListing);
 router.delete('/:id', deleteListing);
 router.post('/:id/sync', syncListing);
+router.post('/:id/reconcile', reconcileListing);
+router.get('/:id/logs', getListingLogs);
 
 module.exports = router;
