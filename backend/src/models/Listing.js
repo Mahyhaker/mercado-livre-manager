@@ -24,6 +24,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    attributes: {
+      type: Array,
+      default: []
+    },
     price: {
       type: Number,
       required: true,
