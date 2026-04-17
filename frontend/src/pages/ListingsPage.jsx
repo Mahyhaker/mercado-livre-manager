@@ -13,7 +13,17 @@ const initialForm = {
   price: '',
   availableQuantity: '',
   categoryId: '',
-  pictureUrl: ''
+  pictureUrl: '',
+  attributesText: `[
+  { "id": "BRAND", "value_name": "Dell" },
+  { "id": "MODEL", "value_name": "Inspiron 15" },
+  { "id": "COLOR", "value_name": "Preto" },
+  { "id": "MANUFACTURER", "value_name": "Dell" },
+  { "id": "CARRIER", "value_name": "Desbloqueado" },
+  { "id": "IS_DUAL_SIM", "value_name": "Não" },
+  { "id": "ALPHANUMERIC_MODELS", "value_name": "Inspiron15" },
+  { "id": "CELLPHONES_ANATEL_HOMOLOGATION_NUMBER", "value_name": "123456789" }
+]`
 };
 
 export default function ListingsPage() {
@@ -82,6 +92,14 @@ export default function ListingsPage() {
     setSuccess('');
   };
 
+  const parseAttributes = () => {
+    try {
+      return JSON.parse(form.attributesText);
+    } catch (error) {
+      throw new Error('O campo de atributos precisa estar em JSON válido');
+    }
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -94,7 +112,8 @@ export default function ListingsPage() {
         price: Number(form.price),
         availableQuantity: Number(form.availableQuantity),
         categoryId: form.categoryId.trim(),
-        pictureUrl: form.pictureUrl.trim()
+        pictureUrl: form.pictureUrl.trim(),
+        attributes: parseAttributes()
       });
 
       setSuccess('Anúncio criado com sucesso');
@@ -102,7 +121,7 @@ export default function ListingsPage() {
       await loadListings();
     } catch (err) {
       console.error(err);
-      setError(err?.response?.data?.message || 'Erro ao criar anúncio');
+      setError(err?.response?.data?.message || err.message || 'Erro ao criar anúncio');
       setErrorDetails(
         err?.response?.data?.details
           ? JSON.stringify(err.response.data.details, null, 2)
@@ -120,7 +139,8 @@ export default function ListingsPage() {
       price: item.price ?? '',
       availableQuantity: item.availableQuantity ?? '',
       categoryId: item.categoryId || '',
-      pictureUrl: item.pictureUrl || ''
+      pictureUrl: item.pictureUrl || '',
+      attributesText: JSON.stringify(item.attributes || [], null, 2)
     });
     clearMessages();
   };
@@ -139,7 +159,8 @@ export default function ListingsPage() {
         price: Number(form.price),
         availableQuantity: Number(form.availableQuantity),
         categoryId: form.categoryId.trim(),
-        pictureUrl: form.pictureUrl.trim()
+        pictureUrl: form.pictureUrl.trim(),
+        attributes: parseAttributes()
       });
 
       setSuccess('Anúncio atualizado com sucesso');
@@ -147,7 +168,7 @@ export default function ListingsPage() {
       await loadListings();
     } catch (err) {
       console.error(err);
-      setError(err?.response?.data?.message || 'Erro ao atualizar anúncio');
+      setError(err?.response?.data?.message || err.message || 'Erro ao atualizar anúncio');
       setErrorDetails(
         err?.response?.data?.details
           ? JSON.stringify(err.response.data.details, null, 2)
@@ -301,7 +322,7 @@ export default function ListingsPage() {
           <input
             type="text"
             name="categoryId"
-            placeholder="Categoria leaf (ex: MLB1055)"
+            placeholder="Categoria leaf"
             value={form.categoryId}
             onChange={handleChange}
             required
@@ -310,9 +331,19 @@ export default function ListingsPage() {
           <input
             type="text"
             name="pictureUrl"
-            placeholder="URL da imagem"
+            placeholder="URL pública da imagem"
             value={form.pictureUrl}
             onChange={handleChange}
+            required
+          />
+
+          <textarea
+            name="attributesText"
+            placeholder="Atributos em JSON"
+            value={form.attributesText}
+            onChange={handleChange}
+            rows={12}
+            style={{ width: '100%' }}
             required
           />
 
