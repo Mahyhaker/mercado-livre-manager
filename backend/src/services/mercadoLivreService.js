@@ -70,7 +70,8 @@ async function createRemoteItem(mlUserId, listing) {
     listing_type_id: 'gold_special',
     pictures: listing.pictureUrl
       ? [{ source: listing.pictureUrl }]
-      : []
+      : [],
+    attributes: Array.isArray(listing.attributes) ? listing.attributes : []
   };
 
   const response = await axios.post(
@@ -93,7 +94,8 @@ async function updateRemoteItem(mlUserId, itemId, listing) {
   const payload = {
     title: listing.title,
     price: Number(listing.price),
-    available_quantity: Number(listing.availableQuantity)
+    available_quantity: Number(listing.availableQuantity),
+    attributes: Array.isArray(listing.attributes) ? listing.attributes : []
   };
 
   const response = await axios.put(
