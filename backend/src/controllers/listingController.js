@@ -17,7 +17,14 @@ async function getConnectedUserId() {
 
 async function createListing(req, res, next) {
   try {
-    const { title, price, availableQuantity, categoryId, pictureUrl } = req.body;
+    const {
+      title,
+      price,
+      availableQuantity,
+      categoryId,
+      pictureUrl,
+      attributes
+    } = req.body;
 
     const normalizedTitle = title.trim();
 
@@ -38,6 +45,7 @@ async function createListing(req, res, next) {
       availableQuantity,
       categoryId,
       pictureUrl,
+      attributes: Array.isArray(attributes) ? attributes : [],
       mlUserId: 'local-user',
       syncStatus: 'pending'
     });
@@ -90,7 +98,15 @@ async function getListingById(req, res, next) {
 
 async function updateListing(req, res, next) {
   try {
-    const { title, price, availableQuantity, categoryId, pictureUrl } = req.body;
+    const {
+      title,
+      price,
+      availableQuantity,
+      categoryId,
+      pictureUrl,
+      attributes
+    } = req.body;
+
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {
@@ -116,6 +132,7 @@ async function updateListing(req, res, next) {
     listing.availableQuantity = availableQuantity;
     listing.categoryId = categoryId;
     listing.pictureUrl = pictureUrl || '';
+    listing.attributes = Array.isArray(attributes) ? attributes : [];
     listing.syncStatus = 'pending';
     listing.localVersion += 1;
 
@@ -171,7 +188,8 @@ async function syncListing(req, res, next) {
 
     listing.syncStatus = 'synced';
     listing.lastSyncedAt = new Date();
-    listing.lastMarketplaceStatus = remoteItem.status || listing.lastMarketplaceStatus || '';
+    listing.lastMarketplaceStatus =
+      remoteItem.status || listing.lastMarketplaceStatus || '';
     listing.status = remoteItem.status || listing.status;
     listing.localVersion += 1;
 
