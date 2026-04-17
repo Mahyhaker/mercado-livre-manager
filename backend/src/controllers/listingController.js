@@ -110,6 +110,24 @@ async function updateListing(req, res, next) {
   }
 }
 
+async function deleteListing(req, res, next) {
+  try {
+    const listing = await Listing.findById(req.params.id);
+
+    if (!listing) {
+      return res.status(404).json({ message: 'Anúncio não encontrado' });
+    }
+
+    await Listing.findByIdAndDelete(req.params.id);
+
+    return res.json({
+      message: 'Anúncio excluído com sucesso'
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function syncListing(req, res, next) {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -135,5 +153,6 @@ module.exports = {
   getListings,
   getListingById,
   updateListing,
+  deleteListing,
   syncListing
 };
