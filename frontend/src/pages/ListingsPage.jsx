@@ -12,7 +12,8 @@ const initialForm = {
   title: '',
   price: '',
   availableQuantity: '',
-  categoryId: ''
+  categoryId: '',
+  pictureUrl: ''
 };
 
 export default function ListingsPage() {
@@ -92,7 +93,8 @@ export default function ListingsPage() {
         title: form.title.trim(),
         price: Number(form.price),
         availableQuantity: Number(form.availableQuantity),
-        categoryId: form.categoryId.trim()
+        categoryId: form.categoryId.trim(),
+        pictureUrl: form.pictureUrl.trim()
       });
 
       setSuccess('Anúncio criado com sucesso');
@@ -117,7 +119,8 @@ export default function ListingsPage() {
       title: item.title || '',
       price: item.price ?? '',
       availableQuantity: item.availableQuantity ?? '',
-      categoryId: item.categoryId || ''
+      categoryId: item.categoryId || '',
+      pictureUrl: item.pictureUrl || ''
     });
     clearMessages();
   };
@@ -135,7 +138,8 @@ export default function ListingsPage() {
         title: form.title.trim(),
         price: Number(form.price),
         availableQuantity: Number(form.availableQuantity),
-        categoryId: form.categoryId.trim()
+        categoryId: form.categoryId.trim(),
+        pictureUrl: form.pictureUrl.trim()
       });
 
       setSuccess('Anúncio atualizado com sucesso');
@@ -297,9 +301,19 @@ export default function ListingsPage() {
           <input
             type="text"
             name="categoryId"
-            placeholder="Categoria (ex: MLB1234)"
+            placeholder="Categoria leaf (ex: MLB1055)"
             value={form.categoryId}
             onChange={handleChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="pictureUrl"
+            placeholder="URL da imagem"
+            value={form.pictureUrl}
+            onChange={handleChange}
+            required
           />
 
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
