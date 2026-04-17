@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function errorHandler(err, req, res, next) {
   console.error(err?.response?.data || err);
 
@@ -10,4 +11,21 @@ function errorHandler(err, req, res, next) {
   });
 }
 
+=======
+function errorHandler(err, req, res, next) {
+  const responseData = err?.response?.data || null;
+
+  console.error('Erro tratado pelo middleware:');
+  console.error(responseData || err);
+
+  return res.status(err?.response?.status || err.status || 500).json({
+    message:
+      responseData?.message ||
+      err.message ||
+      'Erro interno do servidor',
+    details: responseData
+  });
+}
+
+>>>>>>> 266f3b5 (melhoria: exibir erro detalhado da API Mercado Livre)
 module.exports = { errorHandler };
