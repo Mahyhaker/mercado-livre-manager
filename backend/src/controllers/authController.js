@@ -19,18 +19,20 @@ async function callback(req, res, next) {
       return res.status(400).json({ message: 'Código de autorização não recebido' });
     }
 
+    const params = new URLSearchParams();
+    params.append('grant_type', 'authorization_code');
+    params.append('client_id', process.env.ML_APP_ID);
+    params.append('client_secret', process.env.ML_CLIENT_SECRET);
+    params.append('code', code);
+    params.append('redirect_uri', process.env.ML_REDIRECT_URI);
+
     const tokenResponse = await axios.post(
       'https://api.mercadolibre.com/oauth/token',
-      {
-        grant_type: 'authorization_code',
-        client_id: process.env.ML_APP_ID,
-        client_secret: process.env.ML_CLIENT_SECRET,
-        code,
-        redirect_uri: process.env.ML_REDIRECT_URI
-      },
+      params.toString(),
       {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          accept: 'application/json'
         }
       }
     );

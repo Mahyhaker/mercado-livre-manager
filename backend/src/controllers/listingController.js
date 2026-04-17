@@ -1,4 +1,19 @@
 const Listing = require('../models/Listing');
+const Token = require('../models/Token');
+const {
+  createRemoteItem,
+  updateRemoteItem
+} = require('../services/mercadoLivreService');
+
+async function getConnectedUserId() {
+  const latestToken = await Token.findOne().sort({ updatedAt: -1 });
+
+  if (!latestToken) {
+    throw new Error('Nenhuma conta do Mercado Livre está conectada');
+  }
+
+  return latestToken.mlUserId;
+}
 
 async function createListing(req, res, next) {
   try {
@@ -136,14 +151,48 @@ async function syncListing(req, res, next) {
       return res.status(404).json({ message: 'Anúncio não encontrado' });
     }
 
+    const connectedMlUserId = await getConnectedUserId();
+
+    let remoteItem;
+
+    if (!listing.mlItemId) {
+      remoteItem = await createRemoteItem(connectedMlUserId, listing);
+      listing.mlItemId = remoteItem.id;
+      listing.mlUserId = connectedMlUserId;
+    } else {
+      remoteItem = await updateRemoteItem(
+        connectedMlUserId,
+        listing.mlItemId,
+        listing
+      );
+    }
+
     listing.syncStatus = 'synced';
     listing.lastSyncedAt = new Date();
-    listing.lastMarketplaceStatus = 'active';
+    listing.lastMarketplaceStatus = remoteItem.status || listing.lastMarketplaceStatus || '';
+    listing.status = remoteItem.status || listing.status;
+    listing.localVersion += 1;
 
     await listing.save();
 
-    res.json(listing);
+    return res.json({
+      message: 'Anúncio sincronizado com Mercado Livre com sucesso',
+      listing,
+      mercadoLivreResponse: remoteItem
+    });
   } catch (error) {
+    if (req.params?.id) {
+      try {
+        const listing = await Listing.findById(req.params.id);
+        if (listing) {
+          listing.syncStatus = 'error';
+          await listing.save();
+        }
+      } catch (innerError) {
+        console.error('Erro ao marcar anúncio como error:', innerError.message);
+      }
+    }
+
     next(error);
   }
 }
