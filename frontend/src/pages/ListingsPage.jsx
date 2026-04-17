@@ -3,6 +3,7 @@ import {
   getListings,
   createListing,
   updateListing,
+  deleteListing,
   syncListing
 } from '../api/listingsApi';
 import { getMe, getLoginUrl } from '../api/authApi';
@@ -137,6 +138,34 @@ export default function ListingsPage() {
     }
   };
 
+  const handleDelete = async (id, title) => {
+    const confirmed = window.confirm(
+      `Tem certeza que deseja excluir o anúncio "${title}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+
+      await deleteListing(id);
+
+      if (editingId === id) {
+        resetForm();
+      }
+
+      setSuccess('Anúncio excluído com sucesso');
+      await loadListings();
+    } catch (err) {
+      console.error(err);
+      setError(err?.response?.data?.message || 'Erro ao excluir anúncio');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSync = async (id) => {
     try {
       setLoading(true);
@@ -243,7 +272,7 @@ export default function ListingsPage() {
             onChange={handleChange}
           />
 
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button type="submit">
               {editingId ? 'Salvar alterações' : 'Criar anúncio'}
             </button>
@@ -318,6 +347,9 @@ export default function ListingsPage() {
                       <button onClick={() => handleEdit(item)}>Editar</button>
                       <button onClick={() => handleSync(item._id)}>
                         Sincronizar
+                      </button>
+                      <button onClick={() => handleDelete(item._id, item.title)}>
+                        Excluir
                       </button>
                     </div>
                   </td>
