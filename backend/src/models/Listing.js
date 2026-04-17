@@ -20,6 +20,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    pictureUrl: {
+      type: String,
+      default: ''
+    },
     price: {
       type: Number,
       required: true,
