@@ -17,7 +17,7 @@ async function getConnectedUserId() {
 
 async function createListing(req, res, next) {
   try {
-    const { title, price, availableQuantity, categoryId } = req.body;
+    const { title, price, availableQuantity, categoryId, pictureUrl } = req.body;
 
     const normalizedTitle = title.trim();
 
@@ -37,6 +37,7 @@ async function createListing(req, res, next) {
       price,
       availableQuantity,
       categoryId,
+      pictureUrl,
       mlUserId: 'local-user',
       syncStatus: 'pending'
     });
@@ -89,7 +90,7 @@ async function getListingById(req, res, next) {
 
 async function updateListing(req, res, next) {
   try {
-    const { title, price, availableQuantity, categoryId } = req.body;
+    const { title, price, availableQuantity, categoryId, pictureUrl } = req.body;
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {
@@ -114,6 +115,7 @@ async function updateListing(req, res, next) {
     listing.price = price;
     listing.availableQuantity = availableQuantity;
     listing.categoryId = categoryId;
+    listing.pictureUrl = pictureUrl || '';
     listing.syncStatus = 'pending';
     listing.localVersion += 1;
 
