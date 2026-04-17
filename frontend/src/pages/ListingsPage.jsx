@@ -172,12 +172,17 @@ export default function ListingsPage() {
       setError('');
       setSuccess('');
 
-      await syncListing(id);
-      setSuccess('Anúncio sincronizado com sucesso');
+      const { data } = await syncListing(id);
+      setSuccess(data?.message || 'Anúncio sincronizado com sucesso');
       await loadListings();
     } catch (err) {
       console.error(err);
-      setError(err?.response?.data?.message || 'Erro ao sincronizar anúncio');
+      const apiMessage =
+        err?.response?.data?.details?.message ||
+        err?.response?.data?.message ||
+        'Erro ao sincronizar anúncio';
+
+      setError(apiMessage);
     } finally {
       setLoading(false);
     }
