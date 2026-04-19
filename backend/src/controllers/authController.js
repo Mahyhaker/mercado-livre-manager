@@ -4,7 +4,7 @@ const Token = require('../models/Token');
 
 async function login(req, res, next) {
   try {
-    const authUrl = `https://auth.mercadolivre.com.br/authorization?response_type=code&client_id=${process.env.ML_APP_ID}&redirect_uri=${encodeURIComponent(process.env.ML_REDIRECT_URI)}&prompt=login`;
+    const authUrl = `https://auth.mercadolivre.com.br/authorization?response_type=code&client_id=${process.env.ML_APP_ID}&redirect_uri=${encodeURIComponent(process.env.ML_REDIRECT_URI)}`;
     return res.redirect(authUrl);
   } catch (error) {
     next(error);
