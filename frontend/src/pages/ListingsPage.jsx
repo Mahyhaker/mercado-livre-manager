@@ -8,7 +8,7 @@ import {
   reconcileListing,
   getListingLogs
 } from '../api/listingsApi';
-import { getMe, getLoginUrl } from '../api/authApi';
+import { getMe, getLoginUrl, logoutMercadoLivre } from '../api/authApi';
 
 const initialForm = {
   title: '',
@@ -33,6 +33,10 @@ function statusColor(status) {
       return '#991b1b';
     case 'conflict':
       return '#7c3aed';
+    case 'success':
+      return '#166534';
+    case 'warning':
+      return '#92400e';
     default:
       return '#374151';
   }
@@ -300,6 +304,31 @@ export default function ListingsPage() {
     window.location.href = getLoginUrl();
   };
 
+  const handleLogout = async () => {
+    const confirmed = window.confirm('Deseja desconectar a conta do Mercado Livre?');
+
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      clearMessages();
+
+      await logoutMercadoLivre();
+      setSuccess('Conta desconectada com sucesso');
+      setAuthInfo({
+        connected: false,
+        user: null
+      });
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+        'Erro ao desconectar conta'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const totalListings = listings.length;
   const syncedCount = listings.filter((item) => item.syncStatus === 'synced').length;
   const pendingCount = listings.filter((item) => item.syncStatus === 'pending').length;
@@ -365,11 +394,17 @@ export default function ListingsPage() {
               <p><strong>Nickname:</strong> {authInfo.user?.nickname || '-'}</p>
               <p><strong>ML User ID:</strong> {authInfo.user?.mlUserId || '-'}</p>
               <p><strong>Email:</strong> {authInfo.user?.email || '-'}</p>
+
+              <button onClick={handleLogout}>
+                Desconectar conta
+              </button>
             </div>
           ) : (
             <div>
               <p>Status: Não conectado</p>
-              <button onClick={handleConnectMercadoLivre}>Conectar conta Mercado Livre</button>
+              <button onClick={handleConnectMercadoLivre}>
+                Conectar conta Mercado Livre
+              </button>
             </div>
           )}
         </div>
@@ -389,11 +424,46 @@ export default function ListingsPage() {
             onSubmit={editingId ? handleUpdate : handleCreate}
             style={{ display: 'grid', gap: '0.9rem' }}
           >
-            <input name="title" placeholder="Título do anúncio" value={form.title} onChange={handleChange} required />
-            <input name="price" type="number" placeholder="Preço" value={form.price} onChange={handleChange} required min="0" step="0.01" />
-            <input name="availableQuantity" type="number" placeholder="Quantidade em estoque" value={form.availableQuantity} onChange={handleChange} required min="0" />
-            <input name="categoryId" placeholder="Categoria leaf" value={form.categoryId} onChange={handleChange} required />
-            <input name="pictureUrl" placeholder="URL pública da imagem" value={form.pictureUrl} onChange={handleChange} required />
+            <input
+              name="title"
+              placeholder="Título do anúncio"
+              value={form.title}
+              onChange={handleChange}
+              required
+            />
+            <input
+              name="price"
+              type="number"
+              placeholder="Preço"
+              value={form.price}
+              onChange={handleChange}
+              required
+              min="0"
+              step="0.01"
+            />
+            <input
+              name="availableQuantity"
+              type="number"
+              placeholder="Quantidade em estoque"
+              value={form.availableQuantity}
+              onChange={handleChange}
+              required
+              min="0"
+            />
+            <input
+              name="categoryId"
+              placeholder="Categoria leaf"
+              value={form.categoryId}
+              onChange={handleChange}
+              required
+            />
+            <input
+              name="pictureUrl"
+              placeholder="URL pública da imagem"
+              value={form.pictureUrl}
+              onChange={handleChange}
+              required
+            />
             <textarea
               name="attributesText"
               placeholder="Atributos em JSON"
