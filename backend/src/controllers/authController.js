@@ -109,8 +109,22 @@ async function me(req, res, next) {
   }
 }
 
+async function logout(req, res, next) {
+  try {
+    await Token.deleteMany({});
+    await User.deleteMany({});
+
+    return res.json({
+      message: 'Conta desconectada com sucesso'
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   login,
   callback,
-  me
+  me,
+  logout
 };
