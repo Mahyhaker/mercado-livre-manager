@@ -227,7 +227,6 @@ Os atributos são inseridos manualmente via JSON, o que não é ideal para usuá
 6. Log de sincronização é registrado
 
 ---
-
 ## ⚠️ Tratamento de cenários reais
 
 ### ✔ Duplicidade
@@ -247,6 +246,15 @@ Os atributos são inseridos manualmente via JSON, o que não é ideal para usuá
 
 * Reconciliação manual
 * Status `conflict`
+
+---
+
+🔐 Autenticação com Mercado Livre
+A autenticação com o Mercado Livre foi implementada com foco em demonstração da integração OAuth e das funcionalidades principais do sistema.
+Na versão atual:
+O token de acesso é armazenado de forma centralizada no backend
+Não há isolamento por sessão ou por usuário da aplicação
+Como consequência, a aplicação pode exibir a última conta conectada, independentemente do cliente que acessa o sistema
 
 ---
 
