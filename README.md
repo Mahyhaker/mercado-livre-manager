@@ -6,6 +6,8 @@ Aplicação full stack para **gerenciamento de anúncios no Mercado Livre**, per
 
 ## 🚀 Demo
 
+⭐ Aperte no Backend para ligar e depois acesse o front
+
 * 🌐 Frontend: https://mercado-livre-manager-two.vercel.app
 * 🔧 Backend: https://mercado-livre-manager-api.onrender.com
 
