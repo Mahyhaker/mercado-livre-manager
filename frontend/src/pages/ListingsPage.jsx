@@ -230,37 +230,28 @@ export default function ListingsPage() {
   };
 
   const handleSync = async (id) => {
-  try {
-    setLoading(true);
-    clearMessages();
+    try {
+      setLoading(true);
+      clearMessages();
 
-    const { data } = await syncListing(id);
-    setSuccess(data?.message || 'Anúncio sincronizado com sucesso');
-    await loadListings();
-  } catch (err) {
-    console.error(err);
-
-    const backendMessage =
-      err?.response?.data?.message ||
-      err?.message ||
-      'Erro ao sincronizar anúncio';
-
-    const backendDetails =
-      err?.response?.data?.details ||
-      err?.response?.data ||
-      null;
-
-    setError(backendMessage);
-
-    setErrorDetails(
-      backendDetails
-        ? JSON.stringify(backendDetails, null, 2)
-        : ''
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      const { data } = await syncListing(id);
+      setSuccess(data?.message || 'Anúncio sincronizado com sucesso');
+      await loadListings();
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+        err?.message ||
+        'Erro ao sincronizar anúncio'
+      );
+      setErrorDetails(
+        err?.response?.data?.details
+          ? JSON.stringify(err.response.data.details, null, 2)
+          : ''
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleReconcile = async (id) => {
     try {
