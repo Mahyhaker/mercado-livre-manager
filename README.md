@@ -139,11 +139,11 @@ Para criar anúncios, o sistema utiliza um formulário com campos básicos e um 
 
 ### 🧾 Campos básicos
 
-* **Título**
-* **Preço**
-* **Quantidade**
+* **Título (Mouse Gamer Redragon M711 RGB USB Preto)**
+* **Preço (129)**
+* **Quantidade (4)**
 * **Categoria ID (Exemplo MLB3530)**
-* **Imagem (URL pública direta)**
+* **Imagem URL pública direta (https://i.imgur.com/2nCt3Sbl.jpg)**
 
 ---
 
