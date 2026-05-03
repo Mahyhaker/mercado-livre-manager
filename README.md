@@ -142,7 +142,7 @@ Para criar anúncios, o sistema utiliza um formulário com campos básicos e um 
 * **Título**
 * **Preço**
 * **Quantidade**
-* **Categoria (ID)**
+* **Categoria ID (Exemplo MLB3530)**
 * **Imagem (URL pública direta)**
 
 ---
