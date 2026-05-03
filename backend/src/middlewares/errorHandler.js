@@ -1,15 +1,15 @@
 function errorHandler(err, req, res, next) {
-  console.error('Erro capturado:', err?.response?.data || err);
+  const responseData = err?.response?.data || null;
+
+  console.error('Erro tratado pelo middleware:');
+  console.error(responseData || err);
 
   return res.status(err?.response?.status || err.status || 500).json({
     message:
-      err?.response?.data?.message ||
+      responseData?.message ||
       err.message ||
       'Erro interno do servidor',
-    details:
-      err?.response?.data ||
-      err.details ||
-      null
+    details: responseData
   });
 }
 
