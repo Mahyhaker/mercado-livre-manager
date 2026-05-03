@@ -6,9 +6,6 @@ const {
   updateRemoteItem,
   getRemoteItem
 } = require('../services/mercadoLivreService');
-const {
-  validateListingBeforeSync
-} = require('../services/listingValidationService');
 
 async function getConnectedUserId() {
   const latestToken = await Token.findOne().sort({ updatedAt: -1 });
@@ -241,8 +238,6 @@ async function syncListing(req, res, next) {
       return res.status(404).json({ message: 'Anúncio não encontrado' });
     }
 
-    await validateListingBeforeSync(listing);
-
     const connectedMlUserId = await getConnectedUserId();
 
     let result;
@@ -301,7 +296,7 @@ async function syncListing(req, res, next) {
             status: 'error',
             source: 'mercado_livre',
             requestPayload: null,
-            responsePayload: error?.response?.data || error.details || null,
+            responsePayload: error?.response?.data || null,
             message:
               error?.response?.data?.message ||
               error.message ||
